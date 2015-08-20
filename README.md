@@ -12,13 +12,23 @@ $ npm start
 
 Visit http://127.0.0.1:8080 with your browser.
 
-## Learning Flux
+If you want to get a static build, please run `npm run build`.
 
-First, you should read [Flux for stupid people](https://github.com/ruanyf/flux-for-stupid-people-demo) and its [demo](https://github.com/ruanyf/flux-for-stupid-people-demo).
+```javascript
+$ npm run build
+```
+
+Now open `index.html` in your browser.
+
+## Learn Flux
+
+[Flux for stupid people](https://github.com/ruanyf/flux-for-stupid-people-demo) and its [demo](https://github.com/ruanyf/flux-for-stupid-people-demo) is a great start guide.
+
+## TodoMVC: Step By Step
 
 Now, we want to build a [TodoMVC](http://todomvc.com/). How to do it?
 
-### HTML Scaffold
+### Step 1: HTML Scaffold
 
 `index.html` is used to load `bundle.js`.
 
@@ -43,7 +53,7 @@ Now, we want to build a [TodoMVC](http://todomvc.com/). How to do it?
 
 Our TodoMVC lives in the #todoapp section.
 
-### App.js
+### Step 2: App.js
 
 `App.js` is the entry file.
 
@@ -60,7 +70,7 @@ React.render(
 
 You could find `TodoApp` is our top-level component.
 
-### TodoApp
+### Step 3: TodoApp
 
 ```javascript
 // js/components/TodoApp.js
@@ -89,7 +99,7 @@ module.exports = TodoApp;
 
 You could find TodoApp is composed of 3 components of `Header`, `MainSection` and `Footer`.
 
-## Header
+## Step 4: Header
 
 ```javascript
 var React = require('react');
@@ -127,7 +137,7 @@ module.exports = Header;
 
 The main part of `Header` is `TodoTextInput` used to input new Todo items.
 
-### MainSection
+### Step 5: MainSection
 
 `MainSection` shows a lot of `TodoItem`s.
 
@@ -163,7 +173,7 @@ var MainSection = React.createClass({
 module.exports = MainSection;
 ```
 
-### Footer
+### Step 6: Footer
 
 ```javascript
 var React = require('react');
@@ -190,7 +200,7 @@ var Footer = React.createClass({
 module.exports = Footer;
 ```
 
-### Initial State
+### Step 7: Initial State
 
 When TodoApp first loaded, its state is all existing TodoItems.
 
@@ -212,7 +222,7 @@ render: function() {
 },
 ```
 
-### When user inputs something
+### Step 8: When user inputs something
 
 User inputs a Todo item into `TodoTextInput`.
 
@@ -269,7 +279,9 @@ var TodoTextInput = React.createClass({
 module.exports = TodoTextInput;
 ```
 
-When `TodoTextInput` loses the focus, or user presses down the Enter key, `this.props.onSave(this.state.value)` will be called.
+You could see, when `TodoTextInput` loses the focus, or user presses down the Enter key, `this.props.onSave(this.state.value)` will be called. 
+
+The following is its code. it uses `AppDispatcher.dispatch` to send an action `TODO_CREATE`.
 
 ```javascript
 // js/components/Header.js
@@ -283,7 +295,7 @@ When `TodoTextInput` loses the focus, or user presses down the Enter key, `this.
   }
 ```
 
-`_onSave` uses `AppDispatcher.dispatch` to send an action `TODO_CREATE`.
+`AppDispatcher` creates a item in `TodoStore`. Then, `TodoStore` emits a `change` event.
 
 ```javascript
 // js/dispatcher/AppDispatcher.js
@@ -312,9 +324,7 @@ AppDispatcher.register(function(action) {
 module.exports = AppDispatcher;
 ```
 
-`AppDispatcher` creates a item in `TodoStore`. Then, `TodoStore` emits a `change` event.
-
-`TodoApp` listens the `change` event.
+On another side, `TodoApp` listens the `change` event. `this._onChange` is the callback of `change` event.
 
 ```javascript
 // js/components/TodoApp.js
@@ -328,17 +338,15 @@ module.exports = AppDispatcher;
   },
 ```
 
-`this._onChange` is the callback of `change` event.
+
+`TodoApp` gets all Todo items in the store, and puts them into `TodoApp` state object. Then, make a forced re-rendering of TodoApp.
 
 ```javascript
   _onChange: function() {
     this.state = TodoStore.getAll();
     this.forceUpdate();
-    // this.setState(TodoStore.getAll());
   }
 ```
-
-`TodoApp` gets all Todo items in the store, and puts them into `TodoApp` state object. Then, make a forced re-rendering of TodoApp.
 
 Now we can see the new Todo items in the browser.
 
