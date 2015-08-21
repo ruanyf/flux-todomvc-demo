@@ -1,4 +1,6 @@
-TodoMVC is [Flux](https://github.com/facebook/flux)'s [official example](https://github.com/facebook/flux/tree/master/examples/flux-todomvc), but still complicated for the beginners. This repo is its simplified version.
+TodoMVC is [Flux](https://github.com/facebook/flux)'s [official example](https://github.com/facebook/flux/tree/master/examples/flux-todomvc), but still complicated for a beginner.
+
+This repo is its simplified version. I hope it helpful for you to understand Flux.
 
 ![](screenshot.png)
 
@@ -25,8 +27,6 @@ Now open `index.html` in your browser.
 [Flux for stupid people](https://github.com/ruanyf/flux-for-stupid-people-demo) and its [demo](https://github.com/ruanyf/flux-for-stupid-people-demo) is a great start guide.
 
 ## TodoMVC: Step By Step
-
-Now, we want to build a [TodoMVC](http://todomvc.com/). How to do it?
 
 ### Step 1: HTML Scaffold
 
@@ -55,6 +55,23 @@ Our TodoMVC lives in the #todoapp section.
 
 ### Step 2: App.js
 
+`buddle.js` is built from `App.js`.
+
+```javascript
+// webpack.config.js
+module.exports = {
+  entry: './js/app.js',
+  output: {
+    filename: './js/bundle.js'
+  },
+  module: {
+    loaders:[
+      { test: /\.js[x]?$/, exclude: /node_modules/, loaders: ['babel-loader'] },
+    ]
+  }
+};
+```
+
 `App.js` is the entry file.
 
 ```javascript
@@ -68,9 +85,11 @@ React.render(
 );
 ```
 
-You could find `TodoApp` is our top-level component.
+You could see `TodoApp` is the top-level component.
 
 ### Step 3: TodoApp
+
+TodoApp is composed of 3 components of `Header`, `MainSection` and `Footer`.
 
 ```javascript
 // js/components/TodoApp.js
@@ -97,9 +116,9 @@ var TodoApp = React.createClass({
 module.exports = TodoApp;
 ```
 
-You could find TodoApp is composed of 3 components of `Header`, `MainSection` and `Footer`.
-
 ## Step 4: Header
+
+The main part of `Header` is `TodoTextInput` used to input new Todo items.
 
 ```javascript
 var React = require('react');
@@ -135,11 +154,9 @@ var Header = React.createClass({
 module.exports = Header;
 ```
 
-The main part of `Header` is `TodoTextInput` used to input new Todo items.
-
 ### Step 5: MainSection
 
-`MainSection` shows a lot of `TodoItem`s.
+`MainSection` is composed of `TodoItem`.
 
 ```javascript
 var React = require('react');
@@ -175,6 +192,8 @@ module.exports = MainSection;
 
 ### Step 6: Footer
 
+The `Footer` shows some statics and a clear button.
+
 ```javascript
 var React = require('react');
 
@@ -202,7 +221,7 @@ module.exports = Footer;
 
 ### Step 7: Initial State
 
-When TodoApp first loaded, its state is all existing TodoItems.
+When TodoApp is loaded, its state is all existing TodoItems.
 
 ```javascript
 // js/component/TodoApp.js
@@ -224,7 +243,7 @@ render: function() {
 
 ### Step 8: When user inputs something
 
-User inputs a Todo item into `TodoTextInput`.
+Now user inputs a Todo item into `TodoTextInput`.
 
 ```javascript
 // js/components/TodoTextInput.js
@@ -279,7 +298,7 @@ var TodoTextInput = React.createClass({
 module.exports = TodoTextInput;
 ```
 
-You could see, when `TodoTextInput` loses the focus, or user presses down the Enter key, `this.props.onSave(this.state.value)` will be called. 
+You could see, when `TodoTextInput` loses the focus, or user presses down the Enter key, `this.props.onSave(this.state.value)` will be called.
 
 The following is its code. it uses `AppDispatcher.dispatch` to send an action `TODO_CREATE`.
 
